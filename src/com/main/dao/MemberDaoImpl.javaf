@@ -1,0 +1,147 @@
+package com.main.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
+import org.springframework.stereotype.Repository;
+
+import com.main.bean.MemberVO;
+import com.main.bean.UserLoginHistoryVO;
+import com.pmanage.framework.persist.sqlMap;
+
+@Repository("memberDao")
+public class _MemberDaoImpl  extends sqlMap implements MemberDao  {
+
+	// 조회
+	/*public List<MemberVO> findAllMembers() {
+		Session session = sessionFactory.getCurrentSession();
+		
+		// HQL : MemberVO 에 맵핑된 테이블 간단 조회
+		// 일반적인 sql 중심이 아니라 java 객체 중심 언어
+		String hql = "from MemberVO pm where pm.userId= :P1";
+		Query query = session.createQuery(hql);
+		query.setParameter("P1", "sjpark");
+		
+		// 단순 조회
+		List<MemberVO> result = (List<MemberVO>) query.list();
+		
+		// createCriteria : 객체를 이용해 조회 (hibernate 의 DB 호환을 높히기 위한 API) 
+		//List<MemberVO> result = (List<MemberVO>) session.createCriteria(MemberVO.class).list();
+		
+		// Native SQL : 실제 SQL 을 이용
+		//String sql = "select {user.*} from Pm_user user";
+		//List<MemberVO> result = (List<MemberVO>) session.createSQLQuery(sql). addEntity("user", MemberVO.class).list();;
+		
+		return result;
+	}*/
+	
+	// 조회
+	public List<UserLoginHistoryVO> memberHistoryJoin() {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("P0", "");
+		
+		List<UserLoginHistoryVO> result = (List<UserLoginHistoryVO>) sqlMap.query(UserLoginHistoryVO.class,"","",map);
+		
+		return result;
+	}
+	
+	// 키값 조회
+	public MemberVO get(Session s ,String userId) {
+		return (MemberVO) s.get(MemberVO.class, userId);
+	}
+	
+	// 수정
+	// @Transactional AOP 사용.
+	// @Transactional AOP 미사용 주석처리.
+	public int memberEdit(String userId, String pwd, String name) throws Exception{
+		/*
+		 * 기존 코드는 sessionFactory.openSession() 을 사용하지만
+		 * Transaction annotation을 사용하는 경우 sessionFactory의 getCurrentSession 을 호출한다.
+		 * 
+		 * Transaction annotation 을 사용하지 않을 경우 아래 코드를 실행하는 것과 같다.
+		 * 
+		 * MemberVO memberVo = null; 
+		 * Session s = null;
+		 * Transaction transaction = null;
+		 * 
+		 * try{
+		 * 		s = sessionFactory.openSession();
+		 *		transaction = s.beginTransaction();
+		 *		transaction.setTimeout(dbTimeout);
+		 *
+		 *		memberVo = get(s, userId);
+		 *		memberVo.setPwd(pwd);		
+		 *		memberVo.setName(name);
+		 *	
+		 *		s.update(memberVo);
+		 *		transaction.commit();
+		 * 	}catch(Exception e){
+		 * 		transaction.rollback();
+		 *	}finally{
+		 *		s.close();
+		 *	}
+		 *
+		 * */
+		
+		Session session = sessionFactory.getCurrentSession();
+		
+		// sessionFactory UPDATE
+		/*
+		MemberVO memberVo = get(userId);
+		memberVo.setPwd(pwd);		
+		memberVo.setName(name);
+		
+		session.update(memberVo);
+		*/
+		
+		// HQL UPDATE
+		String hql = "";
+		Query query = null;
+		int result = 0;
+		
+		hql += "update MemberVO SET name = :P3, pwd = :P2 ";
+		hql += "where userId = :P1";
+		query = session.createQuery(hql);
+		query.setParameter("P1", userId);
+		query.setParameter("P2", pwd);
+		query.setParameter("P3", name);
+		
+		result = query.executeUpdate();
+		
+		//if("a".equals("a")){
+		//	throw new Exception();
+		//}
+		/*
+		* 메서드 종료시에 자동 commit이 이루어지기 때문에 
+		* getCurrentSession 을 통해서 transaction 이 적용된 세션을 얻어내야 한다.
+		*/
+		
+		return result;
+	}
+	
+	// 추가
+	public void memberAdd(String userId, String pwd, String name){
+		MemberVO memberVo = new MemberVO();
+		Session session = sessionFactory.getCurrentSession();
+		
+		memberVo.setUserId(userId);		
+		memberVo.setPwd(pwd);
+		memberVo.setName(name);
+		
+		session.save(memberVo);
+	}
+	
+	// 삭제
+	public void memberDelete(String userId){
+		Session s = sessionFactory.getCurrentSession();
+		MemberVO memberVo = get(s, userId);
+		
+		s.delete(memberVo);
+	}
+
+}
