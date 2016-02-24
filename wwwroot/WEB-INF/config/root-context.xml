@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<bean id="viewResolver" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="/WEB-INF/config/db.properties"/>
+		<property name="fileEncoding" value="UTF-8"/>
+	</bean>
+	
+	<!--  dbcp을 pom.xml에 추가.   커넥션 풀 사용 -->
+	<!-- SimpleDriverDataSource 는 매번 커넥션을 맺기 때문에 TEST 에 적합. 실무 비적합. -->
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"> -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+</beans>
