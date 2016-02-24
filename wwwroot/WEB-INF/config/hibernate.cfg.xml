@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+   		
+   		<!-- 하이버네이트의 중간 SQL 언어 : HQL ,  각 DBMS 마다 HQL을 구현한 드라이버를 제공.  dialect 가 이 드라이버임.  -->
+    	<!-- HSQL 설정 -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        
+        <!-- 하이버네이트가 작업을 할때 실제로 호출되는 SQL을 보여준다.(boolean) 
+         system consol 창에 쿼리가 출력된다.  -->
+        <property name="hibernate.show_sql">false</property>
+        
+ 		<!-- 쿼리를 출력할때 주석도 출력  -->
+        <property name="hibernate.use_sql_comments">true</property> 
+
+         <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">1</property>
+        
+        <!-- 스레드 저장소에 세션을 관리하려면 아래 속성 넣어야 함. -->
+        <!-- getCurrentSession 내부적으로 스레드 저장소에 세션 관리. -->
+          <!-- 굳이 close open 명시할 필요 없음. -->
+        <!-- <property name="current_session_context_class">thread</property> -->
+        
+    </session-factory>
+</hibernate-configuration>
+
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- 하이버네이트 4.0 부터는 dtd 위치가 바뀌어서 아래로 변경  -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.main.bean.MemberVO" table="pm_user">
+        <id name="userId" column="user_id" type="java.lang.String"/>
+        <property name="pwd" column="pwd" not-null="true" type="java.lang.String"/>
+        <property name="name" column="name" not-null="true" type="java.lang.String"/>
+    </class>
+</hibernate-mapping>

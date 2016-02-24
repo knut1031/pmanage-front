@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+							     http://www.springframework.org/schema/mvc/spring-mvc.xsd
+								http://www.springframework.org/schema/beans 
+								http://www.springframework.org/schema/beans/spring-beans.xsd
+								http://www.springframework.org/schema/context 
+								http://www.springframework.org/schema/context/spring-context.xsd
+								http://www.springframework.org/schema/tx
+								http://www.springframework.org/schema/tx/spring-tx-4.0.xsd	">
+
+	
+	<!-- @Component, @Controller, @Service, @Repository 어노테이션이 있는 클래스들을 Spring bean 으로 등록 -->
+	<!-- 서비스에 필요한 빈들 (어노테이션 기준) 을 찾아서 생성 -->
+	<context:component-scan base-package="com.main.*" />
+	
+	<!-- component-scan 을 통해 만들어진 빈들에 uri 를 맵핑한다. -->
+	<mvc:annotation-driven />
+
+	<!-- Annotation 설정을 이용해서 Transaction  을 관리하기 위해 아래 설정 사용 -->
+	<tx:annotation-driven />
+
+	<!-- jsp 에서 href 참조할때 복잡한 폴더구조를 생략하고 resoures  로 간략하게 생략하기 위해 사용
+	ex ) <link rel="search"  href="/resources/search/opensearch-description.https.xml"/> -->
+	<!-- 웹케시(cache-period) 를 사용함으로써 웹 반응을 증가시킨다. 초단위로 설정. 파일이 수정되면 자동으로 케싱해준다.   --> 
+	<mvc:resources mapping="/jsp/**" location="/jsp/" cache-period="86400"/>
+	<mvc:resources mapping="/images/**" location="/images/" cache-period="86400" />
+	<mvc:resources mapping="/css/**" location="/css/" cache-period="86400" />
+	
+	<!-- 아래에 대해서 웹 브라우저 cache 방지 , 예외적으로 사진은 하루동안 cache -->
+	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+		     <mvc:mapping path="/api/**/*"/>
+		     <bean class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+		          <property name="cacheSeconds" value="0"/>
+		          <property name="cacheMappings">
+		              <props>
+		                 <prop key="/api/photo/**">86400</prop>
+		              </props>
+		          </property>
+		      </bean>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+	
+	<!-- 웹에서 접근했을 경우 root경로/jsp 폴더에서 확장자 jsp 인 파일을 매핑 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	
+	
+</beans>
