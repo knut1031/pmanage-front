@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- 하이버네이트 4.0 부터는 dtd 위치가 바뀌어서 아래로 변경  -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- 테이블 명, 필드명 대소문자 상관없음. -->
+    <class name="com.main.bean.UserLoginHistoryVO" table="PM_USER_LOGIN_HISTORY" schema="pmanage">
+        <id name="userId" column="USER_ID" type="java.lang.String"/>
+        <property name="seq" column="SEQ" type="java.lang.Integer"/>
+        <property name="loginGubun" column="LOGIN_GUBUN" not-null="true" type="java.lang.String"/>
+    </class>
+</hibernate-mapping>
+
+
+
